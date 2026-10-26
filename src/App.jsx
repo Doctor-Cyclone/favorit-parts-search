@@ -22,15 +22,16 @@ export default function App() {
     offersStatus,
     error,
   } = useSelector((store) => store.parts);
+  const debounceTimer = useRef(null);
   const brandsRequest = useRef(null);
   const offersRequest = useRef(null);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    debounceTimer.current = setTimeout(() => {
       if (searchNumber.trim())
         brandsRequest.current = dispatch(fetchBrands(searchNumber.trim()));
     }, 450);
     return () => {
-      clearTimeout(timer);
+      clearTimeout(debounceTimer.current);
       brandsRequest.current?.abort();
     };
   }, [dispatch, searchNumber]);
@@ -39,6 +40,14 @@ export default function App() {
     brandsRequest.current?.abort();
     offersRequest.current?.abort();
     dispatch(setSearchNumber(number));
+  };
+  const searchNow = () => {
+    if (!searchNumber.trim() || brandsStatus === "loading") return;
+    clearTimeout(debounceTimer.current);
+    brandsRequest.current?.abort();
+    offersRequest.current?.abort();
+    dispatch(setSearchNumber(searchNumber));
+    brandsRequest.current = dispatch(fetchBrands(searchNumber.trim()));
   };
   const chooseBrand = (brand) => {
     offersRequest.current?.abort();
@@ -60,25 +69,15 @@ export default function App() {
           </span>
           partline<span className="logo-dot">.</span>
         </a>
-        <span className="topbar-caption">Поиск автозапчастей</span>
-        <span className="mode">
-          <i />
-          Favorit Parts API
-        </span>
       </header>
       <main>
-        <div className="intro">
-          <div className="eyebrow">КАТАЛОГ ЗАПЧАСТЕЙ</div>
-          <h1>
-            Нужная деталь.
-            <br />
-            <span>Без лишних поисков.</span>
-          </h1>
-          <p>
-            Производители, аналоги и наличие на складах — по одному артикулу.
-          </p>
-        </div>
-        <SearchForm value={searchNumber} onChange={changeNumber} />
+        <h1>Поиск автозапчастей</h1>
+        <SearchForm
+          value={searchNumber}
+          onChange={changeNumber}
+          onSearch={searchNow}
+          loading={brandsStatus === "loading"}
+        />
         {brandsStatus === "loading" && <Loader>Ищем производителей…</Loader>}
         {error && <ErrorMessage message={error} onRetry={retry} />}
         {brandsStatus === "succeeded" && brands.length > 0 && (
@@ -111,23 +110,7 @@ export default function App() {
               <p>Попробуйте другого производителя или артикул.</p>
             </div>
           ))}
-        {!searchNumber.trim() && (
-          <div className="empty-state initial">
-            <span aria-hidden="true">⌕</span>
-            <h2>Начните с артикула</h2>
-            <p>
-              Сначала выберите производителя,
-              <br />а мы соберём доступные предложения.
-            </p>
-          </div>
-        )}
-        <footer>
-          <span>
-            partline<span className="logo-dot">.</span>
-          </span>
-          <span>Данные о наличии и ценах · Favorit Parts</span>
-          <span>React + Redux Toolkit</span>
-        </footer>
+        <footer>Данные Favorit Parts</footer>
       </main>
     </>
   );

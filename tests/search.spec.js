@@ -37,7 +37,9 @@ test("debounce, two-step API contract, warehouse rows and immediate reset", asyn
     });
   });
   await page.goto("/");
-  await expect(page.getByText("Начните с артикула")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Найти", exact: true }),
+  ).toBeDisabled();
   const input = page.getByLabel("Артикул детали");
   await input.fill("0");
   await page.waitForTimeout(150);
@@ -60,7 +62,9 @@ test("debounce, two-step API contract, warehouse rows and immediate reset", asyn
   await input.fill("OC90");
   await expect(page.getByRole("table")).toHaveCount(0);
   await page.getByRole("button", { name: "Очистить артикул" }).click();
-  await expect(page.getByText("Начните с артикула")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Найти", exact: true }),
+  ).toBeDisabled();
 });
 test("empty brands, API quota, retry, network failure and empty offers", async ({
   page,
@@ -106,4 +110,25 @@ test("mobile layout contains horizontal scrolling inside the table", async ({
     ),
   ).toBe(true);
   await page.screenshot({ path: "test-results/mobile.png", fullPage: true });
+});
+
+test("search button and Enter start one request without a second debounced request", async ({ page }) => {
+  const calls = [];
+  await page.route("**/api/parts?**", async (route) => {
+    calls.push(new URL(route.request().url()).searchParams.get("number"));
+    await route.fulfill({ json: { goods: [{ brand: "MEYLE" }] } });
+  });
+  await page.goto("/");
+  await page.screenshot({ path: "test-results/search-simple.png", fullPage: true });
+  const input = page.getByLabel("Артикул детали");
+  await input.fill("01089");
+  await page.getByRole("button", { name: "Найти", exact: true }).click();
+  await expect(page.getByRole("button", { name: "MEYLE" })).toBeVisible();
+  await page.waitForTimeout(600);
+  expect(calls).toEqual(["01089"]);
+  await input.fill("OC90");
+  await input.press("Enter");
+  await expect(page.getByRole("button", { name: "MEYLE" })).toBeVisible();
+  await page.waitForTimeout(600);
+  expect(calls).toEqual(["01089", "OC90"]);
 });

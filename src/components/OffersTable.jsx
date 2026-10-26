@@ -14,13 +14,12 @@ export default function OffersTable({ offers, brand, number }) {
   return (
     <section className="panel offers-panel" aria-labelledby="offers-title">
       <div className="section-heading">
-        <span className="step">03</span>
         <div>
           <h2 id="offers-title">
             Предложения и аналоги <small>{offers.length}</small>
           </h2>
           <p>
-            {brand} / {number} · Каждая строка — предложение отдельного склада
+            {brand} · {number}
           </p>
         </div>
       </div>

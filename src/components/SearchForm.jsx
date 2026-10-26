@@ -1,37 +1,41 @@
-export default function SearchForm({ value, onChange }) {
+export default function SearchForm({ value, onChange, onSearch, loading }) {
   return (
-    <section className="panel search-panel" aria-labelledby="search-title">
-      <div className="section-heading">
-        <span className="step">01</span>
-        <div>
-          <h2 id="search-title">Найдём нужную деталь</h2>
-          <p>Введите артикул — подберём производителей и предложения.</p>
-        </div>
-      </div>
+    <form
+      className="search-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSearch();
+      }}
+    >
       <label htmlFor="number">Артикул детали</label>
-      <div className="input-wrap">
-        <span aria-hidden="true">⌕</span>
-        <input
-          id="number"
-          autoComplete="off"
-          placeholder="Например, 01089"
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-        />
-        {value && (
-          <button
-            className="clear"
-            aria-label="Очистить артикул"
-            onClick={() => onChange("")}
-          >
-            ×
-          </button>
-        )}
+      <div className="search-row">
+        <div className="input-wrap">
+          <input
+            id="number"
+            autoComplete="off"
+            placeholder="Например, 01089"
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+          />
+          {value && (
+            <button
+              type="button"
+              className="clear"
+              aria-label="Очистить артикул"
+              onClick={() => onChange("")}
+            >
+              ×
+            </button>
+          )}
+        </div>
+        <button
+          className="primary"
+          type="submit"
+          disabled={!value.trim() || loading}
+        >
+          Найти
+        </button>
       </div>
-      <div className="search-hint">
-        <span>Поиск начнётся автоматически</span>
-        <span>450 мс после ввода</span>
-      </div>
-    </section>
+    </form>
   );
 }
