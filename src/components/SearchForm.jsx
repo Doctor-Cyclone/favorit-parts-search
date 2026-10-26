@@ -1,4 +1,4 @@
-export default function SearchForm({ value, onChange, isDemo }) {
+export default function SearchForm({ value, onChange }) {
   return (
     <section className="panel search-panel" aria-labelledby="search-title">
       <div className="section-heading">
@@ -32,16 +32,6 @@ export default function SearchForm({ value, onChange, isDemo }) {
         <span>Поиск начнётся автоматически</span>
         <span>450 мс после ввода</span>
       </div>
-      {isDemo && (
-        <div className="examples">
-          Попробуйте:
-          {["01089", "7160500039S", "OC90"].map((number) => (
-            <button key={number} onClick={() => onChange(number)}>
-              {number} ↗
-            </button>
-          ))}
-        </div>
-      )}
     </section>
   );
 }

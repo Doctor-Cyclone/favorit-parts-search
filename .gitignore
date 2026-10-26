@@ -7,3 +7,4 @@ playwright-report/
 test-results/
 api-reference.pdf
 *.local.json
+.idea/

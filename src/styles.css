@@ -121,39 +121,6 @@ h1 span {
 .intro {
   margin-bottom: 30px;
 }
-.demo-notice {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #eef2ff;
-  border: 1px solid #dce4ff;
-  border-radius: 12px;
-  padding: 15px 20px;
-  margin-bottom: 21px;
-  color: #526593;
-  font-size: 12px;
-}
-.demo-notice > span:first-child {
-  font-size: 22px;
-  color: #315df4;
-}
-.demo-notice strong {
-  font-size: 12px;
-  font-weight: 700;
-  color: #354e89;
-}
-.demo-notice p {
-  margin: 3px 0 0;
-  font-size: 11px;
-}
-.demo-tag {
-  margin-left: auto;
-  font-size: 9px;
-  letter-spacing: 1px;
-  border: 1px solid #c9d5f8;
-  border-radius: 4px;
-  padding: 2px 6px;
-}
 .panel {
   background: #fff;
   border: 1px solid #e4e7ed;
@@ -251,29 +218,6 @@ label {
   font-size: 10px;
   color: #969eac;
   margin-top: 8px;
-}
-.examples {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 10px;
-  color: #959dab;
-  margin-top: 23px;
-  padding-top: 18px;
-  border-top: 1px solid #f0f1f5;
-  flex-wrap: wrap;
-}
-.examples button {
-  background: #f6f7fa;
-  border: 1px solid #e8ebf1;
-  border-radius: 5px;
-  color: #68758c;
-  font-size: 10px;
-  padding: 4px 9px;
-}
-.examples button:hover {
-  background: #e9eeff;
-  color: #315df4;
 }
 .brands {
   display: flex;
@@ -498,13 +442,6 @@ footer > span:first-child {
   }
   .panel {
     padding: 21px 18px;
-  }
-  .demo-notice {
-    padding: 13px;
-    gap: 10px;
-  }
-  .demo-tag {
-    display: none;
   }
   .section-heading {
     gap: 10px;

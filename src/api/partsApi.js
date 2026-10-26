@@ -1,5 +1,3 @@
-import { demoRequest } from "./demo";
-export const isDemo = import.meta.env.VITE_DEMO_MODE === "true";
 export function readGoods(data) {
   if (!data || typeof data !== "object")
     throw new Error("API вернул некорректный ответ.");
@@ -57,24 +55,21 @@ export function normalizeOffers(goods) {
 export async function requestParts({ number, brand }, signal) {
   try {
     let data;
-    if (isDemo) data = await demoRequest({ number, brand }, signal);
-    else {
-      const params = new URLSearchParams({ number });
-      if (brand) {
-        params.set("brand", brand);
-        params.set("analogues", "on");
-      }
-      const response = await fetch(`/api/parts?${params}`, { signal });
-      if (!response.ok)
-        throw new Error(
-          `Сервис недоступен (HTTP ${response.status}). Попробуйте позже.`,
-        );
-      try {
-        data = await response.json();
-      } catch (error) {
-        if (error.name === "AbortError") throw error;
-        throw new Error("API вернул некорректный JSON. Попробуйте позже.");
-      }
+    const params = new URLSearchParams({ number });
+    if (brand) {
+      params.set("brand", brand);
+      params.set("analogues", "on");
+    }
+    const response = await fetch(`/api/parts?${params}`, { signal });
+    if (!response.ok)
+      throw new Error(
+        `Сервис недоступен (HTTP ${response.status}). Попробуйте позже.`,
+      );
+    try {
+      data = await response.json();
+    } catch (error) {
+      if (error.name === "AbortError") throw error;
+      throw new Error("API вернул некорректный JSON. Попробуйте позже.");
     }
     return readGoods(data);
   } catch (error) {

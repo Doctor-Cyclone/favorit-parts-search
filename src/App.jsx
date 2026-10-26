@@ -6,7 +6,6 @@ import {
   selectBrand,
   setSearchNumber,
 } from "./store/partsSlice";
-import { isDemo } from "./api/partsApi";
 import SearchForm from "./components/SearchForm";
 import BrandList from "./components/BrandList";
 import OffersTable from "./components/OffersTable";
@@ -64,7 +63,7 @@ export default function App() {
         <span className="topbar-caption">Поиск автозапчастей</span>
         <span className="mode">
           <i />
-          {isDemo ? "Деморежим" : "Favorit Parts API"}
+          Favorit Parts API
         </span>
       </header>
       <main>
@@ -79,24 +78,7 @@ export default function App() {
             Производители, аналоги и наличие на складах — по одному артикулу.
           </p>
         </div>
-        {isDemo && (
-          <aside className="demo-notice">
-            <span aria-hidden="true">ⓘ</span>
-            <div>
-              <strong>Сейчас используются демонстрационные данные</strong>
-              <p>
-                Для работы с Favorit Parts нужен ключ покупателя. Настройка API
-                описана в README.
-              </p>
-            </div>
-            <span className="demo-tag">DEMO</span>
-          </aside>
-        )}
-        <SearchForm
-          value={searchNumber}
-          onChange={changeNumber}
-          isDemo={isDemo}
-        />
+        <SearchForm value={searchNumber} onChange={changeNumber} />
         {brandsStatus === "loading" && <Loader>Ищем производителей…</Loader>}
         {error && <ErrorMessage message={error} onRetry={retry} />}
         {brandsStatus === "succeeded" && brands.length > 0 && (

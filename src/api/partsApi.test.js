@@ -1,9 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { normalizeOffers, readGoods } from "./partsApi";
+import { normalizeOffers, readGoods, requestParts } from "./partsApi";
 afterEach(() => {
   vi.unstubAllGlobals();
-  vi.unstubAllEnvs();
-  vi.resetModules();
 });
 describe("API response normalization", () => {
   it("accepts both documented empty shapes", () => {
@@ -51,13 +49,8 @@ describe("API response normalization", () => {
     ).toEqual([]);
   });
 });
-async function realApi() {
-  vi.stubEnv("VITE_DEMO_MODE", "false");
-  vi.resetModules();
-  return (await import("./partsApi")).requestParts;
-}
 it("sends only number first, then brand and analogues=on, encoding special characters", async () => {
-  const request = await realApi();
+  const request = requestParts;
   const fetchMock = vi
     .fn()
     .mockResolvedValue({ ok: true, json: async () => ({ goods: [{}] }) });
@@ -76,7 +69,7 @@ it("sends only number first, then brand and analogues=on, encoding special chara
   });
 });
 it("distinguishes HTTP, JSON, network and abort failures", async () => {
-  const request = await realApi();
+  const request = requestParts;
   const mock = vi.fn();
   vi.stubGlobal("fetch", mock);
   mock.mockResolvedValueOnce({ ok: false, status: 503 });
